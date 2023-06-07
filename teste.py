@@ -148,23 +148,21 @@ else:
 result = query_result["result"][0]
 pv_details = requests.get(f'{base_url}operation=retrieve&sessionName={session_id}&id={result["id"]}')
 
-# ------------------------------------------------------ #
+if pv_details.status_code == 200:
+    pv_data = pv_details.json()
 
-pv_result = pv_details.json()
-pv_result.pop("id", None)
+    create_pv = pv_data.copy()
 
-create_params = {
-    "operation": "create",
-    "sessionName": session_id,
-    "elementType": "SalesOrder",
-    "element": json.dumps(pv_result)
-    }
+    # Transforme o JSON em uma string
+    json_data = json.dumps(create_pv)
 
-create_response = requests.post(base_url, data=create_params)
-if create_response.status_code == 200:
-    create_result = create_response.json()
-    if "success" in create_result and create_result["success"]:
-        new_pv_id = create_result.get("result", {}).get("id")
-        if new_pv_id:
-            print("Novo pedido de venda (PV) criado com sucesso. ID:", new_pv_id)
-            
+    # Faça a solicitação POST para criar um novo PV
+    create_pv_url = (f'{base_url}operation=create&sessionName={session_id}&elementType=SalesOrders')
+    create_pv_response = requests.post(create_pv_url, data=json_data)
+    pprint.pprint(create_pv_url)
+    pprint.pprint(create_pv_response)
+
+
+
+
+   
