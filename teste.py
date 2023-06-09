@@ -148,21 +148,11 @@ else:
 result = query_result["result"][0]
 pv_details = requests.get(f'{base_url}operation=retrieve&sessionName={session_id}&id={result["id"]}')
 
-if pv_details.status_code == 200:
-    pv_data = pv_details.json()
+pv_dic = pv_details.json()
 
-    create_pv = pv_data.copy()
+pprint.pprint(pv_dic)
 
-    # Transforme o JSON em uma string
-    json_data = json.dumps(create_pv)
-
-    # Faça a solicitação POST para criar um novo PV
-    create_pv_url = (f'{base_url}operation=create&sessionName={session_id}&elementType=SalesOrders')
-    create_pv_response = requests.post(create_pv_url, data=json_data)
-    pprint.pprint(create_pv_url)
-    pprint.pprint(create_pv_response)
-
-
-
-
-   
+    # Criar um novo PV usando os detalhes duplicados
+    #create_url = f'{base_url}?operation=create&sessionName={session_id}&elementType=SalesOrders'
+    #create_response = requests.post(create_url, data=json.dumps(pv_details))
+    
